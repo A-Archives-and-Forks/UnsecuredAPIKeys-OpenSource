@@ -1,11 +1,9 @@
 # UnsecuredAPIKeys Lite
 
 [![GitHub Stars](https://img.shields.io/github/stars/TSCarterJr/UnsecuredAPIKeys-OpenSource?style=social)](https://github.com/TSCarterJr/UnsecuredAPIKeys-OpenSource)
-[![.NET 9](https://img.shields.io/badge/.NET-9.0-512BD4)](https://dotnet.microsoft.com/)
+[![.NET 10](https://img.shields.io/badge/.NET-10.0-512BD4)](https://dotnet.microsoft.com/download/dotnet/10.0)
 [![License](https://img.shields.io/badge/License-Custom-blue)](LICENSE)
 
-
-## ⚠️ Educational Purpose Only
 > **Thank you to everyone who has starred this project!** Your support helps raise awareness about API key security and encourages responsible disclosure practices.
 
 > **Full Version Available:** [www.UnsecuredAPIKeys.com](https://www.UnsecuredAPIKeys.com)
@@ -24,9 +22,16 @@ A command-line tool for discovering and validating exposed API keys on GitHub. T
 | Interface | CLI | Web UI + API |
 | Database | SQLite (local) | PostgreSQL |
 
-## Security Warning
+## ⚠️ Educational Purpose Only
 
-**Do NOT publish your database or results to a public repository.** This would expose working API keys to malicious actors who could abuse them.
+This tool is for **educational and security awareness purposes only**.
+
+- **Learn** how API keys get exposed in public repositories
+- **Understand** the importance of secret management
+- **Report** exposed keys responsibly to repository owners
+- **Never** use discovered keys for unauthorized access
+
+**Do NOT publish your database or results publicly.** This would expose working API keys to malicious actors.
 
 ## Quick Start
 
@@ -48,7 +53,7 @@ dotnet run
 Or use the compiled binary:
 
 ```bash
-./bin/Debug/net9.0/unsecuredapikeys
+./bin/Debug/net10.0/unsecuredapikeys
 ```
 
 ### 3. Configure GitHub Token
@@ -91,7 +96,7 @@ UnsecuredAPIKeys-OpenSource/
 
 ## Prerequisites
 
-- **.NET 9 SDK** - [Download here](https://dotnet.microsoft.com/download/dotnet/9.0)
+- **.NET 10 SDK** - [Download here](https://dotnet.microsoft.com/download/dotnet/10.0)
 - **GitHub Personal Access Token** - [Create here](https://github.com/settings/tokens)
 - **Platform**: Windows, macOS, or Linux
 
@@ -159,7 +164,7 @@ GitHub's API allows ~30 searches/minute with authentication.
 |-------|----------|
 | "No GitHub token configured" | Go to Configure Settings > Set GitHub Token |
 | "Rate limit exceeded" | Wait 60 seconds, or use a different token |
-| Build fails | Ensure .NET 9 SDK is installed: `dotnet --version` |
+| Build fails | Ensure .NET 10 SDK is installed: `dotnet --version` |
 | No keys found | Check your token has `public_repo` scope |
 | Database locked | Close other apps using the .db file |
 

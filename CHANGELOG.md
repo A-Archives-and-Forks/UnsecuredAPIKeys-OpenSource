@@ -2,7 +2,7 @@
 
 All notable changes to UnsecuredAPIKeys Open Source.
 
-## [2.0.0] - 2025-12-09 - Lite Version Release
+## [1.0.0] - 2025-12-09 - Lite Version Release
 
 This release transforms the project from a full-featured web platform into a streamlined CLI tool for local use.
 
