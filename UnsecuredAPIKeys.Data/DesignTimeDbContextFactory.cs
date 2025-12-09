@@ -3,18 +3,18 @@ using Microsoft.EntityFrameworkCore.Design;
 
 namespace UnsecuredAPIKeys.Data
 {
+    /// <summary>
+    /// Factory for creating DBContext during EF Core design-time operations (migrations).
+    /// Uses SQLite for the lite version.
+    /// </summary>
     public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<DBContext>
     {
         public DBContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<DBContext>();
-            
-            // Use the same connection string as your main application
-            optionsBuilder.UseNpgsql("Host=localhost;Database=UnsecuredAPIKeys;Username=postgres;Password=your_password;Port=5432", npgsqlOptions =>
-            {
-                npgsqlOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
-                npgsqlOptions.EnableRetryOnFailure(3);
-            });
+
+            // Use SQLite for the lite version
+            optionsBuilder.UseSqlite("Data Source=unsecuredapikeys.db");
 
             return new DBContext(optionsBuilder.Options);
         }

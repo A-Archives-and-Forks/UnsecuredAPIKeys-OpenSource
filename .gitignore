@@ -361,3 +361,22 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Claude Code
+.claude/
+
+# Environment files
+**/.env
+**/.env.*
+!**/.env.example
+
+# SQLite databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Local config (users will copy from .example)
+**/appsettings.json
+!**/appsettings.example.json
+**/appsettings.Development.json
+**/appsettings.Production.json
