@@ -7,6 +7,7 @@ namespace UnsecuredAPIKeys.Data.Models
         [Key]
         public long Id { get; set; }
         public long APIKeyId { get; set; }  // Foreign key to APIKey
+        public virtual APIKey? APIKey { get; set; }  // Navigation property
 
         // Repository information
         [Required]

@@ -1,9 +1,0 @@
-# CI-optimized npm configuration
-package-lock=true
-audit=false
-fund=false
-prefer-offline=true
-progress=false
-loglevel=error
-cache-max=86400000
-registry=https://registry.npmjs.org/

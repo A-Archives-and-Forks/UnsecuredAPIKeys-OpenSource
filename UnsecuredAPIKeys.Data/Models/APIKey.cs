@@ -32,8 +32,5 @@ namespace UnsecuredAPIKeys.Data.Models
 
         // Navigation property to where this key was found
         public virtual ICollection<RepoReference> References { get; set; } = [];
-
-        // Navigation property to models this key has access to
-        public virtual ICollection<ApiKeyModel> ApiKeyModels { get; set; } = [];
     }
 }

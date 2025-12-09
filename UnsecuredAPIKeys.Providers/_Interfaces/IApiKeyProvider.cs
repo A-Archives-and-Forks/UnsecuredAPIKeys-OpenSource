@@ -1,12 +1,13 @@
-using System.Net; // Added for WebProxy
 using UnsecuredAPIKeys.Data.Common;
-using UnsecuredAPIKeys.Providers.Common; // Added for ValidationResult
+using UnsecuredAPIKeys.Providers.Common;
 
 namespace UnsecuredAPIKeys.Providers._Interfaces
 {
     /// <summary>
     /// Defines the contract for an API key provider, responsible for
     /// identifying and validating keys for a specific service.
+    /// Lite version: OpenAI, Anthropic, Google only.
+    /// Full version: www.UnsecuredAPIKeys.com
     /// </summary>
     public interface IApiKeyProvider
     {
@@ -30,12 +31,7 @@ namespace UnsecuredAPIKeys.Providers._Interfaces
         /// </summary>
         /// <param name="apiKey">The API key string to validate.</param>
         /// <param name="httpClientFactory">The IHttpClientFactory for creating HttpClient instances.</param>
-        /// <param name="proxy">Optional WebProxy to use for the validation request.</param>
         /// <returns>A ValidationResult indicating the outcome of the validation attempt.</returns>
-        Task<ValidationResult> ValidateKeyAsync(string apiKey, IHttpClientFactory httpClientFactory, WebProxy? proxy);
-
-        // Optional: Add methods for logging or specific configurations if needed later
-        // void Configure(IConfiguration configuration);
-        // void SetLogger(ILogger logger);
+        Task<ValidationResult> ValidateKeyAsync(string apiKey, IHttpClientFactory httpClientFactory);
     }
 }

@@ -1,5 +1,4 @@
 using System.Net;
-using System.Net.Http.Headers;
 using Microsoft.Extensions.Logging;
 using UnsecuredAPIKeys.Data.Common;
 using UnsecuredAPIKeys.Providers._Interfaces;
@@ -8,13 +7,15 @@ using UnsecuredAPIKeys.Providers.Common;
 namespace UnsecuredAPIKeys.Providers._Base
 {
     /// <summary>
-    /// Base class for API key providers with common functionality, retry logic, and proper resource management.
+    /// Base class for API key providers with common functionality and retry logic.
+    /// Lite version: OpenAI, Anthropic, Google only.
+    /// Full version with all providers: www.UnsecuredAPIKeys.com
     /// </summary>
     public abstract class BaseApiKeyProvider(ILogger? logger = null) : IApiKeyProvider
     {
         protected const int DEFAULT_MAX_RETRIES = 3;
         protected const int DEFAULT_TIMEOUT_SECONDS = 30;
-        
+
         protected readonly ILogger? _logger = logger;
 
         public abstract string ProviderName { get; }
@@ -24,7 +25,7 @@ namespace UnsecuredAPIKeys.Providers._Base
         /// <summary>
         /// Validates an API key with retry logic and proper resource management.
         /// </summary>
-        public async Task<ValidationResult> ValidateKeyAsync(string apiKey, IHttpClientFactory httpClientFactory, WebProxy? proxy)
+        public async Task<ValidationResult> ValidateKeyAsync(string apiKey, IHttpClientFactory httpClientFactory)
         {
             if (string.IsNullOrWhiteSpace(apiKey))
             {
@@ -54,7 +55,7 @@ namespace UnsecuredAPIKeys.Providers._Base
 
                 try
                 {
-                    using var httpClient = CreateHttpClient(httpClientFactory, proxy);
+                    using var httpClient = CreateHttpClient(httpClientFactory);
                     var result = await ValidateKeyWithHttpClientAsync(apiKey, httpClient);
 
                     if (result.Status != ValidationAttemptStatus.NetworkError)
@@ -68,7 +69,7 @@ namespace UnsecuredAPIKeys.Providers._Base
                 catch (HttpRequestException ex)
                 {
                     lastException = ex;
-                    _logger?.LogWarning(ex, "HTTP request failed on attempt {Retry}/{MaxRetries} for {Provider}", 
+                    _logger?.LogWarning(ex, "HTTP request failed on attempt {Retry}/{MaxRetries} for {Provider}",
                         retry + 1, GetMaxRetries(), ProviderName);
 
                     if (retry == GetMaxRetries() - 1)
@@ -79,7 +80,7 @@ namespace UnsecuredAPIKeys.Providers._Base
                 catch (TaskCanceledException ex)
                 {
                     lastException = ex;
-                    _logger?.LogWarning(ex, "Request timeout on attempt {Retry}/{MaxRetries} for {Provider}", 
+                    _logger?.LogWarning(ex, "Request timeout on attempt {Retry}/{MaxRetries} for {Provider}",
                         retry + 1, GetMaxRetries(), ProviderName);
 
                     if (retry == GetMaxRetries() - 1)
@@ -103,37 +104,24 @@ namespace UnsecuredAPIKeys.Providers._Base
         protected abstract Task<ValidationResult> ValidateKeyWithHttpClientAsync(string apiKey, HttpClient httpClient);
 
         /// <summary>
-        /// Creates an HttpClient with proper configuration and resource management.
+        /// Creates an HttpClient with proper configuration.
         /// </summary>
-        protected virtual HttpClient CreateHttpClient(IHttpClientFactory httpClientFactory, WebProxy? proxy)
+        protected virtual HttpClient CreateHttpClient(IHttpClientFactory httpClientFactory)
         {
-            // Prefer using the factory if available and no proxy is needed
-            if (proxy == null && httpClientFactory != null)
+            try
             {
-                try
-                {
-                    var client = httpClientFactory.CreateClient(ProviderName.ToLowerInvariant().Replace(" ", ""));
-                    client.Timeout = TimeSpan.FromSeconds(GetTimeoutSeconds());
-                    return client;
-                }
-                catch
-                {
-                    // Fall back to manual creation if factory fails
-                }
+                var client = httpClientFactory.CreateClient(ProviderName.ToLowerInvariant().Replace(" ", ""));
+                client.Timeout = TimeSpan.FromSeconds(GetTimeoutSeconds());
+                return client;
             }
-
-            // Manual creation with proxy support
-            var handler = new HttpClientHandler();
-            if (proxy != null)
+            catch
             {
-                handler.Proxy = proxy;
-                handler.UseProxy = true;
+                // Fall back to manual creation if factory fails
+                return new HttpClient
+                {
+                    Timeout = TimeSpan.FromSeconds(GetTimeoutSeconds())
+                };
             }
-
-            return new HttpClient(handler)
-            {
-                Timeout = TimeSpan.FromSeconds(GetTimeoutSeconds())
-            };
         }
 
         /// <summary>

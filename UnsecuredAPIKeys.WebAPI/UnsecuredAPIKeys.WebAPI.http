@@ -1,6 +1,0 @@
-@UnsecuredAPIKeys.WebAPI_HostAddress = http://localhost:5019
-
-GET {{UnsecuredAPIKeys.WebAPI_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
